@@ -24,6 +24,6 @@ node server.js
 ```
 
 ### Browse API
-Go to the [swagger admin API](localhost:3302/docs) on http://hostname:port/docs 
+Go to the [swagger admin API](http://localhost:3302/docs) on http://host:port/docs 
 
 And take it easy !
