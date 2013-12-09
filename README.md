@@ -26,4 +26,6 @@ node server.js
 ### Browse API
 Go to the [swagger admin API](http://localhost:3302/docs) on http://host:port/docs 
 
+Note : For POST/PUT/DELETE operation you need to enter the api_key to 'bee' (can be changed in server.js file)
+
 And take it easy !
