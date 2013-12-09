@@ -1,4 +1,4 @@
-#  Sales backoffice mock data for bee-backend
+#  Products backoffice mock data for bee-backend
 
 ### Sqlite3
 ```
