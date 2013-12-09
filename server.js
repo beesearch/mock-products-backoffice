@@ -17,23 +17,29 @@ var app = express();
 app.use(express.bodyParser());
 swagger.setAppHandler(app);
 
-/*swagger.addValidator(
+swagger.setHeaders = function setHeaders(res) {
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+  res.header("Access-Control-Allow-Headers", "Content-Type, X-API-KEY");
+  res.header("Content-Type", "application/json; charset=utf-8");
+};
+
+swagger.addValidator(
   function validate(req, path, httpMethod) {
-    console.log("api_key : " + req.headers["api_key"]);
     //  example, only allow POST for api_key="special-key"
-    if ("POST" == httpMethod || "DELETE" == httpMethod || "PUT" == httpMethod || "GET" == httpMethod) {
+    if ("POST" == httpMethod || "DELETE" == httpMethod || "PUT" == httpMethod ) {
   
       var apiKey = req.headers["api_key"];
       if (!apiKey) {
         apiKey = url.parse(req.url,true).query["api_key"]; }
-      if ("special-key" == apiKey) {
+      if ("bee" == apiKey) {
         return true; 
       }
       return false;
     }
     return true;
   }
-);	*/
+);	
 
 
 
@@ -49,7 +55,7 @@ swagger.addModels(models)
   .addDelete(petResources.deletePet);
 
 // Configures the app's base path and api version.
-swagger.configure("http://localhost:8002", "0.1");
+swagger.configure("http://localhost:3302", "0.1");
 
 
 // Serve up swagger ui at /docs via static route
@@ -67,7 +73,7 @@ app.get(/^\/docs(\/.*)?$/, function(req, res, next) {
 });
 
 // Start the server on port 8002
-app.listen(8002);
+app.listen(3302);
 
 /*
 

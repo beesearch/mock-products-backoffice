@@ -7,9 +7,9 @@ brew install Sqlite3 	//MAC OS X
 apt-get install sqlite3 //Ubuntu
 
 // Use the database
-sqlite3 sales.db
+sqlite3 products.db
 // Reset the database
-sqlite3 sales.db < sales.sql
+sqlite3 products.db < products.sql
 ```
 
 ### Application
@@ -21,11 +21,9 @@ npm install sqlite3
 ### Start the server
 ```
 node server.js
-
-// Get customer 
-http://localhost:3300/customers
-http://localhost:3300/albums
-http://localhost:3300/albumsWithArtistName
-http://localhost:3300/invoices
-http://localhost:3300/invoicesWithCustomerName
 ```
+
+### Browse API
+Go to the [swagger admin API](localhost:3302/docs) on http://hostname:port/docs 
+
+And take it easy !
