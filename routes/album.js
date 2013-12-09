@@ -7,7 +7,7 @@ var https = require('https');
 
  exports.listAllAlbum = function(req, res){
  	var sqlite3 = require('sqlite3').verbose();
- 	var db = new sqlite3.Database('db/sales.db');
+ 	var db = new sqlite3.Database('db/products.db');
  	var album = []
 
  	console.log("select all album");
@@ -32,7 +32,7 @@ var https = require('https');
 
  exports.listAllAlbumWithArtistName = function(req, res){
  	var sqlite3 = require('sqlite3').verbose();
- 	var db = new sqlite3.Database('db/sales.db');
+ 	var db = new sqlite3.Database('db/products.db');
  	var album = []
 
  	console.log("select all album");
@@ -58,7 +58,7 @@ var https = require('https');
 
  exports.updateAlbum = function(req, res){
  	var sqlite3 = require('sqlite3').verbose();
- 	var db = new sqlite3.Database('db/sap.db');
+ 	var db = new sqlite3.Database('db/products.db');
  	var album = []
 	var options = {}
 
@@ -66,34 +66,29 @@ var https = require('https');
  	db.all(" SELECT AlbumId, Title, Name FROM Album, Artist where Album.ArtistId = Artist.ArtistId AND Album.ArtistId = 1", function(err, rows) {
 
  		rows.forEach(function (row) {
- 			console.log("Title : " + row.Title);
-				
-				// options = {
-				//   host: 'https://itunes.apple.com',
-				//   path: '/search?term=' + 'U2',
-				//   method: 'GET'
-				// };
+ 			console.log("---> Title : " + row.Title);
+ 			console.log("---> Artist : " + row.Name);
+
 
 			https.request('https://itunes.apple.com/search?term=' + row.Title, function(res) {
 
 
 			    var data = '';
-
 				res.setEncoding('utf8');
-			    
 			    res.on('data', function (chunk){
 			        data += chunk;
 			    });
 
 			    res.on('end',function(){
 			        var obj = JSON.parse(data);
-			        //console.log(JSON.stringify(obj));
-			        console.log( obj.results[0].collectionName );
+			        console.log("<--- Title : " + obj.results[0].collectionName );
+					console.log("<--- Artist : " + obj.results[0].artistName );
+					console.log("<- url1 : " + obj.results[0].previewUrl );
+					console.log("<- url2 : " + obj.results[0].artworkUrl60 );
+					console.log("<- url3 : " + obj.results[0].artworkUrl100 );						
 			    })
-
 				
 			}).end();
-
 			
  		});
 		
@@ -101,10 +96,5 @@ var https = require('https');
 
  		db.close();
  	});
-
-
-
-
-
 
  };
