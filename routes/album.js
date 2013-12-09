@@ -1,11 +1,29 @@
 var sqlite3 = require("sqlite3").verbose();
 var https = require('https');
+var sw = require("swagger-node-express");
+var param = require("../node_modules/swagger-node-express/Common/node/paramTypes.js");
+var url = require("url");
+var swe = sw.errors;
 
-/*
- * GET all albums.
- */
+var petData = require("../petData.js");
 
- exports.listAllAlbum = function(req, res){
+function writeResponse (res, data) {
+	sw.setHeaders(res);
+  res.send(JSON.stringify(data));
+}
+
+exports.listAllAlbum = {
+  'spec': {
+    "description" : "Operations about pets",
+    "path" : "/album",
+    "notes" : "Returns a album based on ID",
+    "summary" : "Find pet by ID",
+    "method": "GET",
+    "responseClass" : "Pet",
+    "errorResponses" : [swe.invalid('id'), swe.notFound('pet')],
+    "nickname" : "getPetById"
+  },
+  'action': function (req,res) {
  	var sqlite3 = require('sqlite3').verbose();
  	var db = new sqlite3.Database('db/products.db');
  	var album = []
@@ -13,18 +31,45 @@ var https = require('https');
  	console.log("select all album");
  	db.all("SELECT AlbumId, Title, ArtistId FROM album", function(err, rows) {
  		rows.forEach(function (row) {
- 			album.push([{
+ 			album.push([{	
  				id: row.AlbumId, 
  				title: row.Title, 
  				artistId: row.ArtistId
  			}]);
  		});
 
- 		res.send(album);
-
+		if(album) res.send(JSON.stringify(album));
+		else throw swe.notFound('album');
+ 		
  		db.close();
- 	});
- };
+ 	}); 
+  }
+};
+
+/*
+ * GET all albums.
+ */
+
+ // exports.listAllAlbum = function(req, res){
+ // 	var sqlite3 = require('sqlite3').verbose();
+ // 	var db = new sqlite3.Database('db/products.db');
+ // 	var album = []
+
+ // 	console.log("select all album");
+ // 	db.all("SELECT AlbumId, Title, ArtistId FROM album", function(err, rows) {
+ // 		rows.forEach(function (row) {
+ // 			album.push([{
+ // 				id: row.AlbumId, 
+ // 				title: row.Title, 
+ // 				artistId: row.ArtistId
+ // 			}]);
+ // 		});
+
+ // 		res.send(album);
+
+ // 		db.close();
+ // 	});
+ // };
 
  /*
  * GET all albums with artists infos.

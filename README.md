@@ -16,6 +16,7 @@ sqlite3 products.db < products.sql
 ```
 npm install
 npm install sqlite3
+npm install swagger-node-express
 ```
 
 ### Start the server

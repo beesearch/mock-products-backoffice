@@ -5,25 +5,16 @@
 var express = require('express');
 var url = require("url");
 var swagger = require("swagger-node-express");
-
-//var album = require('./routes/album');
-
 var http = require('http');
-
-var petResources = require("./petResources.js");
+//var petResources = require("./petResources.js");
 
 var app = express();
-
 app.use(express.bodyParser());
+
+// Set Swagger App Handler
 swagger.setAppHandler(app);
 
-swagger.setHeaders = function setHeaders(res) {
-  res.header('Access-Control-Allow-Origin', "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-  res.header("Access-Control-Allow-Headers", "Content-Type, X-API-KEY");
-  res.header("Content-Type", "application/json; charset=utf-8");
-};
-
+// Add API Key Access
 swagger.addValidator(
   function validate(req, path, httpMethod) {
     //  example, only allow POST for api_key="special-key"
@@ -39,29 +30,20 @@ swagger.addValidator(
     }
     return true;
   }
-);	
-
-
-
-var models = require("./models.js");
+);  
 
 // Add models and methods to swagger
-swagger.addModels(models)
-  .addGet(petResources.findByTags)
-  .addGet(petResources.findByStatus)
-  .addGet(petResources.findById)
-  .addPost(petResources.addPet)
-  .addPut(petResources.updatePet)
-  .addDelete(petResources.deletePet);
+//var models = require("./models.js");
+var album = require('./routes/album');
+swagger.addModels(album)
+  .addGet(album.listAllAlbum);
 
 // Configures the app's base path and api version.
 swagger.configure("http://localhost:3302", "0.1");
 
-
 // Serve up swagger ui at /docs via static route
 var docs_handler = express.static(__dirname + '/swagger-ui/');
 app.get(/^\/docs(\/.*)?$/, function(req, res, next) {
-  console.log(req.url);
   if (req.url === '/docs') { // express static barfs on root url w/o trailing slash
     res.writeHead(302, { 'Location' : req.url + '/' });
     res.end();
@@ -72,22 +54,17 @@ app.get(/^\/docs(\/.*)?$/, function(req, res, next) {
   return docs_handler(req, res, next);
 });
 
-// Start the server on port 8002
-app.listen(3302);
-
-/*
-
-// all environments
+// Start the server
 app.set('port', process.env.PORT || 3302);
 app.use(app.router);
 
 
 // routes
-app.get('/albums', album.listAllAlbum);
-app.get('/albumsWithArtistName', album.listAllAlbumWithArtistName);
-app.get('/updateAlbum', album.updateAlbum);
+// app.get('/albums', album.listAllAlbum);
+// app.get('/albumsWithArtistName', album.listAllAlbumWithArtistName);
+// app.get('/updateAlbum', album.updateAlbum);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-*/
