@@ -5,7 +5,7 @@ var param = require("../node_modules/swagger-node-express/Common/node/paramTypes
 var url = require("url");
 var swe = sw.errors;
 
-var petData = require("../petData.js");
+//var petData = require("../petData.js");
 
 function writeResponse (res, data) {
 	sw.setHeaders(res);
@@ -14,14 +14,13 @@ function writeResponse (res, data) {
 
 exports.listAllAlbum = {
   'spec': {
-    "description" : "Operations about pets",
+    "description" : "Operations about albums",
     "path" : "/album",
-    "notes" : "Returns a album based on ID",
-    "summary" : "Find pet by ID",
+    "notes" : "Returns all albums",
+    "summary" : "Find all albums",
     "method": "GET",
-    "responseClass" : "Pet",
-    "errorResponses" : [swe.invalid('id'), swe.notFound('pet')],
-    "nickname" : "getPetById"
+    "responseClass" : "Album",
+    "nickname" : "listAllAlbum"
   },
   'action': function (req,res) {
  	var sqlite3 = require('sqlite3').verbose();
@@ -46,36 +45,18 @@ exports.listAllAlbum = {
   }
 };
 
-/*
- * GET all albums.
- */
 
- // exports.listAllAlbum = function(req, res){
- // 	var sqlite3 = require('sqlite3').verbose();
- // 	var db = new sqlite3.Database('db/products.db');
- // 	var album = []
-
- // 	console.log("select all album");
- // 	db.all("SELECT AlbumId, Title, ArtistId FROM album", function(err, rows) {
- // 		rows.forEach(function (row) {
- // 			album.push([{
- // 				id: row.AlbumId, 
- // 				title: row.Title, 
- // 				artistId: row.ArtistId
- // 			}]);
- // 		});
-
- // 		res.send(album);
-
- // 		db.close();
- // 	});
- // };
-
- /*
- * GET all albums with artists infos.
- */
-
- exports.listAllAlbumWithArtistName = function(req, res){
+exports.listAllAlbumWithArtistName = {
+  'spec': {
+    "description" : "Operations about albums",
+    "path" : "/album",
+    "notes" : "Returns all albums",
+    "summary" : "Find all albums with artist name",
+    "method": "GET",
+    "responseClass" : "Album",
+    "nickname" : "listAllAlbumWithArtistName"
+  },
+  'action': function (req,res) {
  	var sqlite3 = require('sqlite3').verbose();
  	var db = new sqlite3.Database('db/products.db');
  	var album = []
@@ -90,12 +71,13 @@ exports.listAllAlbum = {
  			}]);
  		});
 
- 		res.send(album);
+		if(album) res.send(JSON.stringify(album));
+		else throw swe.notFound('album');
 
  		db.close();
  	});
- };
-
+  }
+};
 
  /*
  * Update all albums with cover url
