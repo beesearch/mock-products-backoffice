@@ -15,90 +15,180 @@ function writeResponse (res, data) {
 exports.listAllAlbum = {
   'spec': {
     "description" : "Operations about albums",
-    "path" : "/album",
-    "notes" : "Returns all albums",
-    "summary" : "Find all albums",
+    "path" : "/album/listAllAlbum",
+    "notes" : "Returns all albums with artistId",
+    "summary" : "List all albums",
     "method": "GET",
-    "responseClass" : "Album",
     "nickname" : "listAllAlbum"
   },
   'action': function (req,res) {
- 	var sqlite3 = require('sqlite3').verbose();
- 	var db = new sqlite3.Database('db/products.db');
- 	var album = []
+   	var sqlite3 = require('sqlite3').verbose();
+   	var db = new sqlite3.Database('db/products.db');
+   	var album = []
 
- 	console.log("select all album");
- 	db.all("SELECT AlbumId, Title, ArtistId FROM album", function(err, rows) {
- 		rows.forEach(function (row) {
- 			album.push([{	
- 				id: row.AlbumId, 
- 				title: row.Title, 
- 				artistId: row.ArtistId
- 			}]);
- 		});
+   	console.log("--> listAllAlbum");
+   	db.all("SELECT AlbumId, Title, ArtistId FROM album", function(err, rows) {
+   		rows.forEach(function (row) {
+   			album.push([{	
+   				id: row.AlbumId, 
+   				title: row.Title, 
+   				artistId: row.ArtistId
+   			}]);
+   		});
 
-		if(album) res.send(JSON.stringify(album));
-		else throw swe.notFound('album');
- 		
- 		db.close();
- 	}); 
+  		if(album) res.send(JSON.stringify(album));
+  		else throw swe.notFound('album');
+   		
+   		db.close();
+   	}); 
   }
 };
-
 
 exports.listAllAlbumWithArtistName = {
   'spec': {
     "description" : "Operations about albums",
-    "path" : "/album",
-    "notes" : "Returns all albums",
-    "summary" : "Find all albums with artist name",
+    "path" : "/album/listAllAlbumWithArtistName",
+    "notes" : "Returns all albums with artist name",
+    "summary" : "List all albums",
     "method": "GET",
-    "responseClass" : "Album",
     "nickname" : "listAllAlbumWithArtistName"
   },
   'action': function (req,res) {
- 	var sqlite3 = require('sqlite3').verbose();
- 	var db = new sqlite3.Database('db/products.db');
- 	var album = []
+   	var sqlite3 = require('sqlite3').verbose();
+   	var db = new sqlite3.Database('db/products.db');
+   	var album = []
 
- 	console.log("select all album");
- 	db.all(" SELECT AlbumId, Title, Name FROM Album, Artist where Album.ArtistId = Artist.ArtistId", function(err, rows) {
- 		rows.forEach(function (row) {
- 			album.push([{
- 				id: row.AlbumId, 
- 				title: row.Title, 
- 				artist: row.Name
- 			}]);
- 		});
+   	console.log("--> listAllAlbumWithArtistName");
+   	db.all(" SELECT AlbumId, Title, Name FROM Album, Artist where Album.ArtistId = Artist.ArtistId", function(err, rows) {
+   		rows.forEach(function (row) {
+   			album.push([{
+   				id: row.AlbumId, 
+   				title: row.Title, 
+   				artist: row.Name
+   			}]);
+   		});
 
-		if(album) res.send(JSON.stringify(album));
-		else throw swe.notFound('album');
+  		if(album) res.send(JSON.stringify(album));
+  		else throw swe.notFound('album');
 
- 		db.close();
- 	});
+   		db.close();
+   	});
   }
 };
 
- /*
- * Update all albums with cover url
- */
+exports.findAlbumByAlbumId = {
+  'spec': {
+    "description" : "Operations about albums",
+    "path" : "/album/findAlbumByAlbumId/{albumId}",
+    "notes" : "Returns album",
+    "summary" : "Find album by AlbumId",
+    "method": "GET",
+    "params" : [param.path("albumId", "ID of album that needs to be fetched", "string")],
+    "nickname" : "findAlbumByAlbumId"
+  },
+  'action': function (req,res) {
+   	var sqlite3 = require('sqlite3').verbose();
+   	var db = new sqlite3.Database('db/products.db');
+   	var album = []
 
- exports.updateAlbum = function(req, res){
+      var albumId = parseInt(req.params.albumId);
+
+   	console.log("--> findAlbumByAlbumId : " + albumId);
+   	db.all("SELECT AlbumId, Title, ArtistId FROM album WHERE AlbumId = " + albumId, function(err, rows) {
+   		rows.forEach(function (row) {
+   			album.push([{	
+   				id: row.AlbumId, 
+   				title: row.Title, 
+   				artistId: row.ArtistId
+   			}]);
+   		});
+
+  		if(album) res.send(JSON.stringify(album));
+  		else throw swe.notFound('album');
+   		
+   		db.close();
+   	}); 
+  }
+};
+
+exports.findAlbumByArtistId = {
+  'spec': {
+    "description" : "Operations about albums",
+    "path" : "/album/findAlbumByArtistId/{artistId}",
+    "notes" : "Returns album",
+    "summary" : "Find album by ArtistId",
+    "method": "GET",
+    "params" : [param.path("artistId", "ID of artist that needs to be fetched", "string")],
+    "nickname" : "findAlbumByArtistId"
+  },
+  'action': function (req,res) {
+   	var sqlite3 = require('sqlite3').verbose();
+   	var db = new sqlite3.Database('db/products.db');
+   	var album = []
+
+      var artistId = parseInt(req.params.artistId);
+
+   	console.log("--> findAlbumByArtistId : " + artistId);
+   	db.all("SELECT AlbumId, Title, ArtistId FROM album WHERE ArtistId = " + artistId, function(err, rows) {
+   		rows.forEach(function (row) {
+   			album.push([{	
+   				id: row.AlbumId, 
+   				title: row.Title, 
+   				artistId: row.ArtistId
+   			}]);
+   		});
+
+  		if(album) res.send(JSON.stringify(album));
+   		
+   		db.close();
+   	}); 
+  }
+};
+
+exports.addAlbum = {
+  'spec': {
+    "description" : "Operations about albums",
+    "path" : "/album",
+    "notes" : "Add album to the store",
+    "summary" : "Add album to the store",
+    "method": "POST",
+    "params" : [param.body("Album", "Album object that needs to be added to the store", "Album")],
+    "nickname" : "addAlbum"
+  },
+  'action': function (req,res) {
+   	var sqlite3 = require('sqlite3').verbose();
+   	var db = new sqlite3.Database('db/products.db');
+   	var album = []
+
+    var body = req.body;
+
+   	console.log("--> addAlbum : " + JSON.stringify(body));
+    console.log("- " + body.id);
+    //var query = "INSERT INTO Album (AlbumId, Title, ArtistId) VALUES (" + body.id + ", '" + body.title + "', " + body.artistId + ")"
+
+    var stmt = db.prepare("INSERT INTO Album (AlbumId, Title, ArtistId) VALUES (9988, '?', 22)", function(err, rows) {
+    //var stmt = db.prepare("INSERT INTO Album (AlbumId, Title, ArtistId) VALUES (999, 'alex', 999)", function(err, rows) {      
+      stmt.run('toto');
+      stmt.finalize();
+      res.send(JSON.stringify(body));
+      
+      db.close();
+   	}); 
+  }
+};
+
+exports.updateAlbum = function(req, res){
  	var sqlite3 = require('sqlite3').verbose();
  	var db = new sqlite3.Database('db/products.db');
  	var album = []
 	var options = {}
-
  	console.log("update all album");
  	db.all(" SELECT AlbumId, Title, Name FROM Album, Artist where Album.ArtistId = Artist.ArtistId AND Album.ArtistId = 1", function(err, rows) {
-
  		rows.forEach(function (row) {
  			console.log("---> Title : " + row.Title);
  			console.log("---> Artist : " + row.Name);
 
-
 			https.request('https://itunes.apple.com/search?term=' + row.Title, function(res) {
-
 
 			    var data = '';
 				res.setEncoding('utf8');
@@ -123,5 +213,4 @@ exports.listAllAlbumWithArtistName = {
 
  		db.close();
  	});
-
  };
