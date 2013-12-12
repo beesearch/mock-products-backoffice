@@ -33,14 +33,17 @@ swagger.addValidator(
 );  
 
 // Add models and methods to swagger
-var models = require("./models.js");
+var models = require("./models/album.js");
 var album = require('./routes/album');
 swagger.addModels(models)
       .addGet(album.listAllAlbum)
       .addGet(album.listAllAlbumWithArtistName)
       .addGet(album.findAlbumByAlbumId)
       .addGet(album.findAlbumByArtistId)
-      .addPost(album.addAlbum);
+      .addPost(album.addAlbum)
+      .addPut(album.updateAlbum)
+      .addDelete(album.deleteAlbum);
+
 
 
 // Configures the app's base path and api version.

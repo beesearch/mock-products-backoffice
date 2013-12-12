@@ -91,7 +91,7 @@ exports.findAlbumByAlbumId = {
    	var db = new sqlite3.Database('db/products.db');
    	var album = []
 
-      var albumId = parseInt(req.params.albumId);
+    var albumId = parseInt(req.params.albumId);
 
    	console.log("--> findAlbumByAlbumId : " + albumId);
    	db.all("SELECT AlbumId, Title, ArtistId FROM album WHERE AlbumId = " + albumId, function(err, rows) {
@@ -158,26 +158,80 @@ exports.addAlbum = {
   'action': function (req,res) {
    	var sqlite3 = require('sqlite3').verbose();
    	var db = new sqlite3.Database('db/products.db');
-   	var album = []
 
     var body = req.body;
 
    	console.log("--> addAlbum : " + JSON.stringify(body));
-    console.log("- " + body.id);
-    //var query = "INSERT INTO Album (AlbumId, Title, ArtistId) VALUES (" + body.id + ", '" + body.title + "', " + body.artistId + ")"
 
-    var stmt = db.prepare("INSERT INTO Album (AlbumId, Title, ArtistId) VALUES (9988, '?', 22)", function(err, rows) {
-    //var stmt = db.prepare("INSERT INTO Album (AlbumId, Title, ArtistId) VALUES (999, 'alex', 999)", function(err, rows) {      
-      stmt.run('toto');
+    var stmt = db.prepare("INSERT INTO Album (AlbumId, Title, ArtistId) VALUES (?, ?, ?)", function(err, rows) {
+      stmt.run(body.id, body.title, body.artistId);
       stmt.finalize();
       res.send(JSON.stringify(body));
-      
-      db.close();
    	}); 
+
+    db.close();
   }
 };
 
-exports.updateAlbum = function(req, res){
+exports.updateAlbum = {
+  'spec': {
+    "description" : "Operations about albums",
+    "path" : "/album",
+    "notes" : "Udate album to the store",
+    "summary" : "Udate album to the store",
+    "method": "PUT",
+    "params" : [param.body("Album", "Album object that needs to be added to the store", "Album")],
+    "nickname" : "updateAlbum"
+  },
+  'action': function (req,res) {
+    var sqlite3 = require('sqlite3').verbose();
+    var db = new sqlite3.Database('db/products.db');
+
+    var body = req.body;
+
+    console.log("--> updateAlbum : " + JSON.stringify(body));
+
+    var stmt = db.prepare("UPDATE Album SET AlbumId = ?, Title = ?, ArtistId = ? WHERE AlbumId = ?", function(err, rows) {
+      stmt.run(body.id, body.title, body.artistId, body.id);
+      stmt.finalize();
+      res.send(JSON.stringify(body));
+    }); 
+
+    db.close();
+  }
+};
+
+
+exports.deleteAlbum = {
+  'spec': {
+    "description" : "Operations about albums",
+    "path" : "/album/{albumId}",
+    "notes" : "Remove album to the store",
+    "summary" : "Remove album to the store",
+    "method": "DELETE",
+    "params" : [param.path("albumId", "ID of album that needs to be remove", "string")],
+    "nickname" : "deleteAlbum"
+  },
+  'action': function (req,res) {
+    var sqlite3 = require('sqlite3').verbose();
+    var db = new sqlite3.Database('db/products.db');
+    var album = []
+
+    var albumId = parseInt(req.params.albumId);
+
+    console.log("--> deleteAlbum : " + albumId);
+
+    var stmt = db.prepare("DELETE FROM Album WHERE AlbumId = ?", function(err, rows) {
+      stmt.run(albumId);
+      stmt.finalize();
+      res.send(album);
+    }); 
+
+    db.close();
+  }
+};
+
+/*exports.updateAlbum = function(req, res){
  	var sqlite3 = require('sqlite3').verbose();
  	var db = new sqlite3.Database('db/products.db');
  	var album = []
@@ -213,4 +267,4 @@ exports.updateAlbum = function(req, res){
 
  		db.close();
  	});
- };
+ };*/
