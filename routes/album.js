@@ -28,7 +28,7 @@ exports.listAllAlbum = {
 		console.log("--> listAllAlbum");
 		db.all("SELECT AlbumId, Title, PreviewUrl, ArtworkUrl30, ArtworkUrl60, ArtworkUrl100, ArtistId FROM album", function(err, rows) {
 			rows.forEach(function (row) {
-				album.push([{	
+				album.push({	
 					id: row.AlbumId, 
 					title: row.Title,
 					PreviewUrl: row.PreviewUrl,
@@ -36,7 +36,7 @@ exports.listAllAlbum = {
 					ArtworkUrl60: row.ArtworkUrl60,
 					ArtworkUrl100: row.ArtworkUrl100,
 					artistId: row.ArtistId
-				}]);
+				});
 			});
 
 			if(album) res.send(JSON.stringify(album));
@@ -64,11 +64,11 @@ exports.listAllAlbumWithArtistName = {
 		console.log("--> listAllAlbumWithArtistName");
 		db.all(" SELECT AlbumId, Title, Name FROM Album, Artist where Album.ArtistId = Artist.ArtistId", function(err, rows) {
 			rows.forEach(function (row) {
-				album.push([{
+				album.push({
 					id: row.AlbumId, 
 					title: row.Title, 
 					artist: row.Name
-				}]);
+				});
 			});
 
 			if(album) res.send(JSON.stringify(album));
@@ -99,11 +99,11 @@ exports.findAlbumByAlbumId = {
 		console.log("--> findAlbumByAlbumId : " + albumId);
 		db.all("SELECT AlbumId, Title, ArtistId FROM album WHERE AlbumId = " + albumId, function(err, rows) {
 			rows.forEach(function (row) {
-				album.push([{	
+				album.push({	
 					id: row.AlbumId, 
 					title: row.Title, 
 					artistId: row.ArtistId
-				}]);
+				});
 			});
 
 			if(album) res.send(JSON.stringify(album));
@@ -134,11 +134,11 @@ exports.findAlbumByArtistId = {
 		console.log("--> findAlbumByArtistId : " + artistId);
 		db.all("SELECT AlbumId, Title, ArtistId FROM album WHERE ArtistId = " + artistId, function(err, rows) {
 			rows.forEach(function (row) {
-				album.push([{	
+				album.push({	
 					id: row.AlbumId, 
 					title: row.Title, 
 					artistId: row.ArtistId
-				}]);
+				});
 			});
 
 			if(album) res.send(JSON.stringify(album));
