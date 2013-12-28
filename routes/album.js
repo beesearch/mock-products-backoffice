@@ -92,18 +92,19 @@ exports.findAlbumByAlbumId = {
 	'action': function (req,res) {
 		var sqlite3 = require('sqlite3').verbose();
 		var db = new sqlite3.Database('db/products.db');
-		var album = []
+		var album;
 
 		var albumId = parseInt(req.params.albumId);
 
 		console.log("--> findAlbumByAlbumId : " + albumId);
-		db.all("SELECT AlbumId, Title, ArtistId FROM album WHERE AlbumId = " + albumId, function(err, rows) {
+		db.all("SELECT AlbumId, Title, ArtistId, ArtworkUrl100 FROM album WHERE AlbumId = " + albumId, function(err, rows) {
 			rows.forEach(function (row) {
-				album.push({	
+				album = {	
 					id: row.AlbumId, 
 					title: row.Title, 
-					artistId: row.ArtistId
-				});
+					artistId: row.ArtistId,
+					ArtworkUrl100: row.ArtworkUrl100
+				};
 			});
 
 			if(album) res.send(JSON.stringify(album));
